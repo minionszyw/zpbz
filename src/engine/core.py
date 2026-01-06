@@ -9,6 +9,7 @@ from src.engine.extractor import (
     CoreChart, FortuneData, AuxiliaryChart
 )
 from src.engine.algorithms.interactions import Interaction
+from src.engine.algorithms.geju import GejuResult
 
 # 补救 1.1.3: 环境快照
 class EnvironmentSnapshot(BaseModel):
@@ -36,6 +37,7 @@ class BaziResult(BaseModel):
     month_command: Optional[MonthCommandResult] = None # 月令分司
     five_elements: Optional[FiveElementsResult] = None # 五行能量分析
     interactions: List[Interaction] = [] # 干支作用关系
+    geju: Optional[GejuResult] = None # 格局判定
 
 class BaziEngine:
     def __init__(self):
@@ -78,6 +80,10 @@ class BaziEngine:
         interactions = InteractionDetector.detect_all(ctx, tracer)
         InteractionDetector.validate_transformations(interactions, ctx, tracer)
         
+        # 3.4 格局判定
+        from src.engine.algorithms.geju import GejuAnalyzer
+        geju = GejuAnalyzer.analyze(ctx, interactions, tracer)
+        
         # 4. 构建快照
         env = EnvironmentSnapshot(original_request=request)
         
@@ -102,6 +108,7 @@ class BaziEngine:
             analysis_trace=tracer.get_steps(),
             month_command=month_command,
             five_elements=five_elements,
-            interactions=interactions
+            interactions=interactions,
+            geju=geju
         )
 
