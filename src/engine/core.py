@@ -1,8 +1,9 @@
 from typing import List, Dict, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
-from src.engine.models import BaziRequest
+from src.engine.models import BaziRequest, TraceStep
 from src.engine.preprocessor import Preprocessor, BaziContext
+from src.engine.utils import Tracer
 from src.engine.extractor import (
     CoreExtractor, FortuneExtractor, AuxiliaryExtractor, 
     CoreChart, FortuneData, AuxiliaryChart
@@ -22,19 +23,29 @@ class BaziResult(BaseModel):
     core: CoreChart
     fortune: FortuneData
     auxiliary: AuxiliaryChart
+    analysis_trace: List[TraceStep] = [] # 算法推导路径
 
 class BaziEngine:
     def __init__(self):
         self.preprocessor = Preprocessor()
 
     def arrange(self, request: BaziRequest) -> BaziResult:
+        tracer = Tracer()
+        
         # 1. 预处理
+        tracer.record("预处理", f"开始处理 {request.name} 的请求")
         ctx = self.preprocessor.process(request)
+        tracer.record("预处理", f"时间校正完成: {ctx.solar.toFullString()}")
         
         # 2. 提取数据
         core_chart = CoreExtractor.extract(ctx)
+        tracer.record("核心命盘", "四柱提取完成")
+        
         fortune_data = FortuneExtractor.extract(ctx)
+        tracer.record("动态运程", "起运时间与大运计算完成")
+        
         auxiliary_chart = AuxiliaryExtractor.extract(ctx)
+        tracer.record("辅助命盘", "胎元、命宫等神煞计算完成")
         
         # 3. 构建快照
         env = EnvironmentSnapshot(original_request=request)
@@ -56,5 +67,6 @@ class BaziEngine:
             birth_lunar_datetime=clean_lunar,
             core=core_chart,
             fortune=fortune_data,
-            auxiliary=auxiliary_chart
+            auxiliary=auxiliary_chart,
+            analysis_trace=tracer.get_steps()
         )

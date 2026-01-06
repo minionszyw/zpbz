@@ -114,6 +114,13 @@ def print_bazi_chart(res):
     print("\n  前五步大运：")
     for dy in fortune.da_yun[:5]:
         print(f"  [{dy.gan_zhi}] {dy.start_year}年起 (岁数: {dy.start_age}) | 旬: {dy.xun}")
+    
+    print("─"*75)
+    print("  [算法推导轨迹 (Calculation Trace)]")
+    for step in res.analysis_trace:
+        val_str = f" | 变动: {step.value}" if step.value is not None else ""
+        print(f"  * [{step.module}] {step.desc}{val_str}")
+    
     print("═"*75 + "\n")
 
 def run_demo():
