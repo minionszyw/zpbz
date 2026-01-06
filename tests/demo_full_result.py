@@ -129,6 +129,11 @@ def print_bazi_chart(res):
         print(f"  > 喜用神：用神[{a.yong_shen}] 喜神[{a.xi_shen}] | 忌神[{a.ji_shen}] 仇神[{a.chou_shen}]")
         print(f"  > 推导逻辑：{a.logic_type}")
     
+    if res.stars:
+        print(f"  > 核心神煞：", end="")
+        stars_str = [f"{s.name}({s.pos})" for s in res.stars]
+        print(", ".join(stars_str))
+    
     print("─"*75)
     for step in res.analysis_trace:
         val_str = f" | 变动: {step.value}" if step.value is not None else ""

@@ -6,5 +6,5 @@ __pycache__/
 .env
 data/*.pdf
 data/*.docx
-plan.md
+TODO.md
 DESIGN.md

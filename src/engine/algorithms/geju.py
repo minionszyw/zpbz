@@ -6,23 +6,61 @@ from src.engine.algorithms.interactions import Interaction
 
 class GejuResult(BaseModel):
     name: str
-    type: str # INNER_EIGHT (正八格), SPECIAL (特殊外格)
-    status: str # 成格, 破格, 带病, 败格
-    is_transformed: bool = False
+    type: str 
+    status: str 
     detail: str
 
 class GejuAnalyzer:
-    """
-    格局分析器 (遵循《渊海子平》标准)
-    """
-    
     @staticmethod
-    def analyze(ctx: BaziContext, interactions: List[Interaction], tracer: Tracer = None) -> GejuResult:
+    def _get_shishen(day_gan: str, target_gan: str) -> str:
+        # 简化版十神映射逻辑 (仅用于定名)
+        from src.engine.algorithms.energy import EnergyModel
+        day_elem = EnergyModel._gan_to_elem(day_gan)
+        target_elem = EnergyModel._gan_to_elem(target_gan)
+        
+        cycle = ["木", "火", "土", "金", "水"]
+        d_idx = cycle.index(day_elem)
+        t_idx = cycle.index(target_elem)
+        diff = (t_idx - d_idx) % 5
+        
+        mapping = {0: "比劫", 1: "食伤", 2: "财星", 3: "官杀", 4: "印绶"}
+        return mapping.get(diff, "未知")
+
+    @staticmethod
+    def analyze(ctx: BaziContext, interactions: List[Interaction], scores: Dict[str, float], tracer: Tracer = None) -> GejuResult:
         lunar = ctx.solar.getLunar()
         eight_char = lunar.getEightChar()
         day_gan = eight_char.getDayGan()
+        from src.engine.algorithms.energy import EnergyModel
+        day_elem = EnergyModel._gan_to_elem(day_gan)
         
-        # 1. 基础格获取 (月令透干或本气)
+        # 1. 识别特殊格局 (优先级最高)
+        total_score = sum(scores.values())
+        day_ratio = scores[day_elem] / total_score if total_score > 0 else 0
+        
+        # A. 专旺格 (炎上、润下等)
+        if day_ratio > 0.7:
+            special_names = {"火": "炎上格", "水": "润下格", "金": "从革格", "木": "曲直格", "土": "稼格"}
+            name = special_names.get(day_elem, "专旺格")
+            return GejuResult(name=name, type="SPECIAL", status="成格", detail="日主气势极盛，五行专旺")
+            
+        # B. 从格 (弃命从财/杀)
+        # 条件：支持率极低且无印星透干
+        all_stems_ss = [eight_char.getYearShiShenGan(), eight_char.getMonthShiShenGan(), eight_char.getTimeShiShenGan()]
+        has_seal = any("印" in s or "枭" in s for s in all_stems_ss)
+        
+        if day_ratio < 0.15 and not has_seal:
+            # 找到最强五行并转化为十神定名
+            sorted_elems = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+            top_elem = sorted_elems[0][0]
+            # 获取最强五行对日主的十神名
+            top_ss = GejuAnalyzer._get_shishen(day_gan, EnergyModel.ELEMENT_MAP[top_elem][0])
+            
+            if any(k in top_ss for k in ["财", "杀", "官", "食", "伤"]):
+                name = f"从{top_ss[:1]}格" # 如 从财格, 从杀格
+                return GejuResult(name=name, type="SPECIAL", status="成格", detail=f"日主无根无助，弃命从{top_ss}")
+
+        # 2. 正八格取法 (月令透干优先)
         month_all_gans = eight_char.getMonthHideGan()
         geju_name = ""
         check_list = [
@@ -40,37 +78,19 @@ class GejuAnalyzer:
         
         if not geju_name:
             main_ss = eight_char.getMonthShiShenZhi()[0]
-            # 如果主气是比劫，则不以比劫定格
             if "比" in main_ss or "劫" in main_ss:
                 geju_name = "建禄格" if "比" in main_ss else "月刃格"
             else:
                 geju_name = main_ss
 
-        # 2. 意象组合升级 (DESIGN 4.6 补强)
+        # 3. 意象组合分析
         all_stems_ss = [eight_char.getYearShiShenGan(), eight_char.getMonthShiShenGan(), eight_char.getTimeShiShenGan()]
-        
         if "伤官" in geju_name or "伤官" in all_stems_ss:
-            if any("印" in s for s in all_stems_ss):
-                geju_name = "伤官佩印"
-        elif "食神" in geju_name:
-            if any("财" in s for s in all_stems_ss):
-                geju_name = "食神生财"
-        elif "杀" in geju_name:
-            if any("印" in s for s in all_stems_ss):
-                geju_name = "杀印相生"
+            if any("印" in s for s in all_stems_ss): geju_name = "伤官佩印"
+        elif "杀" in geju_name and any("印" in s for s in all_stems_ss):
+            geju_name = "杀印相生"
 
-        if not geju_name.endswith("格") and "佩印" not in geju_name and "相生" not in geju_name and "生财" not in geju_name:
+        if not geju_name.endswith("格") and "佩印" not in geju_name and "相生" not in geju_name:
             geju_name += "格"
 
-        # 3. 质量审计 (简易)
-        status = "成格"
-        # 检查天干是否有克损
-        if "正官" in geju_name and "伤官" in all_stems_ss:
-            status = "破格 (伤官见官)"
-        
-        return GejuResult(
-            name=geju_name,
-            type="INNER_EIGHT",
-            status=status,
-            detail=f"综合月令与天干意象判定为[{geju_name}]"
-        )
+        return GejuResult(name=geju_name, type="INNER_EIGHT", status="成格", detail="标准正八格取法")
