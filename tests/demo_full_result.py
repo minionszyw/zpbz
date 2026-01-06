@@ -120,7 +120,16 @@ def print_bazi_chart(res):
     if res.month_command:
         print(f"  > 月令分司：{res.month_command.detail}")
     
-    print("  [算法推导轨迹 (Calculation Trace)]")
+    if res.geju:
+        print(f"  > 格局判定：{res.geju.name} ({res.geju.type}) | 状态: {res.geju.status}")
+        
+    if res.analysis:
+        a = res.analysis
+        print(f"  > 日主强弱：{a.strength_level} (得分: {a.strength_score})")
+        print(f"  > 喜用神：用神[{a.yong_shen}] 喜神[{a.xi_shen}] | 忌神[{a.ji_shen}] 仇神[{a.chou_shen}]")
+        print(f"  > 推导逻辑：{a.logic_type}")
+    
+    print("─"*75)
     for step in res.analysis_trace:
         val_str = f" | 变动: {step.value}" if step.value is not None else ""
         print(f"  * [{step.module}] {step.desc}{val_str}")

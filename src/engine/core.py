@@ -10,6 +10,7 @@ from src.engine.extractor import (
 )
 from src.engine.algorithms.interactions import Interaction
 from src.engine.algorithms.geju import GejuResult
+from src.engine.algorithms.analysis import AnalysisResult
 
 # 补救 1.1.3: 环境快照
 class EnvironmentSnapshot(BaseModel):
@@ -38,6 +39,7 @@ class BaziResult(BaseModel):
     five_elements: Optional[FiveElementsResult] = None # 五行能量分析
     interactions: List[Interaction] = [] # 干支作用关系
     geju: Optional[GejuResult] = None # 格局判定
+    analysis: Optional[AnalysisResult] = None # 强弱喜用判定
 
 class BaziEngine:
     def __init__(self):
@@ -84,6 +86,10 @@ class BaziEngine:
         from src.engine.algorithms.geju import GejuAnalyzer
         geju = GejuAnalyzer.analyze(ctx, interactions, tracer)
         
+        # 3.5 强弱喜用判定
+        from src.engine.algorithms.analysis import AnalysisEngine
+        analysis = AnalysisEngine.analyze(ctx, five_elements.scores, geju, tracer)
+        
         # 4. 构建快照
         env = EnvironmentSnapshot(original_request=request)
         
@@ -109,6 +115,7 @@ class BaziEngine:
             month_command=month_command,
             five_elements=five_elements,
             interactions=interactions,
-            geju=geju
+            geju=geju,
+            analysis=analysis
         )
 
