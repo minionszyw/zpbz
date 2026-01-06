@@ -5,6 +5,6 @@ __pycache__/
 .DS_Store
 .env
 data/*.pdf
+data/*.docx
 plan.md
 DESIGN.md
-verify_lunar_features.py
