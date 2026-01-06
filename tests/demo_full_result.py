@@ -116,6 +116,10 @@ def print_bazi_chart(res):
         print(f"  [{dy.gan_zhi}] {dy.start_year}年起 (岁数: {dy.start_age}) | 旬: {dy.xun}")
     
     print("─"*75)
+    print("  [深度分析指标 (Phase 3)]")
+    if res.month_command:
+        print(f"  > 月令分司：{res.month_command.detail}")
+    
     print("  [算法推导轨迹 (Calculation Trace)]")
     for step in res.analysis_trace:
         val_str = f" | 变动: {step.value}" if step.value is not None else ""

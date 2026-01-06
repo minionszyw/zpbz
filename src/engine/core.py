@@ -14,6 +14,10 @@ class EnvironmentSnapshot(BaseModel):
     processed_at: str = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     original_request: BaziRequest
 
+class MonthCommandResult(BaseModel):
+    current: str
+    detail: str
+
 # 补救 2.4.1: 完整聚合模型
 class BaziResult(BaseModel):
     environment: EnvironmentSnapshot
@@ -24,6 +28,7 @@ class BaziResult(BaseModel):
     fortune: FortuneData
     auxiliary: AuxiliaryChart
     analysis_trace: List[TraceStep] = [] # 算法推导路径
+    month_command: Optional[MonthCommandResult] = None # 月令分司
 
 class BaziEngine:
     def __init__(self):
@@ -47,7 +52,12 @@ class BaziEngine:
         auxiliary_chart = AuxiliaryExtractor.extract(ctx)
         tracer.record("辅助命盘", "胎元、命宫等神煞计算完成")
         
-        # 3. 构建快照
+        # 3. 深度分析 - 月令分司 (Phase 3)
+        from src.engine.algorithms.command import MonthCommandExtractor
+        cmd_gan, cmd_detail = MonthCommandExtractor.get_command(ctx, tracer)
+        month_command = MonthCommandResult(current=cmd_gan, detail=cmd_detail)
+        
+        # 4. 构建快照
         env = EnvironmentSnapshot(original_request=request)
         
         # 过滤掉库自带的星座信息
@@ -68,5 +78,6 @@ class BaziEngine:
             core=core_chart,
             fortune=fortune_data,
             auxiliary=auxiliary_chart,
-            analysis_trace=tracer.get_steps()
+            analysis_trace=tracer.get_steps(),
+            month_command=month_command
         )
