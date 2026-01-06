@@ -1,0 +1,638 @@
+[
+  {
+    "case_name": "蒋介石",
+    "birth_datetime": "1887-10-31 12:00:00",
+    "pillars": [
+      "丁亥",
+      "庚戌",
+      "己巳",
+      "庚午"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "伤官佩印",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "韦千里",
+    "birth_datetime": "1911-03-31 08:00:00",
+    "pillars": [
+      "辛亥",
+      "辛卯",
+      "庚子",
+      "庚辰"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "从财格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "袁世凯",
+    "birth_datetime": "1859-09-16 14:00:00",
+    "pillars": [
+      "己未",
+      "癸酉",
+      "丁巳",
+      "丁未"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "杀印相生",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "吴佩孚",
+    "birth_datetime": "1874-04-22 06:00:00",
+    "pillars": [
+      "甲戌",
+      "戊辰",
+      "己酉",
+      "丁卯"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "身杀两停",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "段祺瑞",
+    "birth_datetime": "1865-03-06 12:00:00",
+    "pillars": [
+      "乙丑",
+      "己卯",
+      "乙亥",
+      "壬午"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "曲直格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "张作霖",
+    "birth_datetime": "1875-03-19 10:00:00",
+    "pillars": [
+      "乙亥",
+      "己卯",
+      "庚辰",
+      "辛巳"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "财官格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "梁启超",
+    "birth_datetime": "1873-02-23 10:00:00",
+    "pillars": [
+      "癸酉",
+      "甲寅",
+      "丙午",
+      "癸巳"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "木火通明",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "胡适",
+    "birth_datetime": "1891-12-17 14:00:00",
+    "pillars": [
+      "辛卯",
+      "庚子",
+      "丁丑",
+      "丁未"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "财官格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "章太炎",
+    "birth_datetime": "1869-01-12 16:00:00",
+    "pillars": [
+      "戊辰",
+      "乙丑",
+      "癸卯",
+      "庚申"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "印绶格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "冯国璋",
+    "birth_datetime": "1859-01-07 08:00:00",
+    "pillars": [
+      "戊午",
+      "乙丑",
+      "乙巳",
+      "庚辰"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "伤官生财",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "曹锟",
+    "birth_datetime": "1862-12-12 20:00:00",
+    "pillars": [
+      "壬戌",
+      "壬子",
+      "庚子",
+      "丙戌"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "金水伤官",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "孙传芳",
+    "birth_datetime": "1885-04-17 18:00:00",
+    "pillars": [
+      "乙酉",
+      "庚辰",
+      "壬寅",
+      "己酉"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "财官格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "康有为",
+    "birth_datetime": "1858-03-19 00:30:00",
+    "pillars": [
+      "戊午",
+      "乙卯",
+      "壬子",
+      "庚子"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "身财两停",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "蔡元培",
+    "birth_datetime": "1868-01-11 04:00:00",
+    "pillars": [
+      "丁卯",
+      "癸丑",
+      "壬辰",
+      "壬寅"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "财官格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "顾维钧",
+    "birth_datetime": "1888-02-01 12:00:00",
+    "pillars": [
+      "丁亥",
+      "癸丑",
+      "壬申",
+      "丙午"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "财官格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "梅兰芳",
+    "birth_datetime": "1894-10-22 14:00:00",
+    "pillars": [
+      "甲午",
+      "甲戌",
+      "丁酉",
+      "丁未"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "伤官生财",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "荣宗敬",
+    "birth_datetime": "1873-09-23 00:30:00",
+    "pillars": [
+      "癸酉",
+      "癸亥",
+      "壬申",
+      "庚子"
+    ],
+    "gender": 1,
+    "expected_strength": "身强",
+    "expected_geju": "金水双清",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "哈同",
+    "birth_datetime": "1851-01-23 06:30:00",
+    "pillars": [
+      "庚戌",
+      "己丑",
+      "己卯",
+      "丁卯"
+    ],
+    "gender": 1,
+    "expected_strength": "身弱",
+    "expected_geju": "七杀格",
+    "source": "千里命稿"
+  },
+  {
+    "case_name": "千里_P84",
+    "pillars": [
+      "癸亥",
+      "壬戌",
+      "辛酉",
+      "庚申"
+    ],
+    "expected_geju": "定格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第84页"
+  },
+  {
+    "case_name": "千里_P85",
+    "pillars": [
+      "甲戌",
+      "乙亥",
+      "丙子",
+      "丁丑"
+    ],
+    "expected_geju": "透癸为伤官之格",
+    "expected_strength": "身弱",
+    "source": "千里命稿 第85页"
+  },
+  {
+    "case_name": "千里_P86",
+    "pillars": [
+      "辛巳",
+      "壬午",
+      "癸未",
+      "甲申"
+    ],
+    "expected_geju": "是为偏财之格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第86页"
+  },
+  {
+    "case_name": "千里_P122",
+    "pillars": [
+      "己酉",
+      "戊申",
+      "丁未",
+      "丙午"
+    ],
+    "expected_geju": "从强格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第122页"
+  },
+  {
+    "case_name": "千里_P123",
+    "pillars": [
+      "己巳",
+      "庚午",
+      "辛未",
+      "壬申"
+    ],
+    "expected_geju": "七杀格",
+    "expected_strength": "身弱",
+    "source": "千里命稿 第123页"
+  },
+  {
+    "case_name": "千里_P124",
+    "pillars": [
+      "壬寅",
+      "辛丑",
+      "庚子",
+      "己亥"
+    ],
+    "expected_geju": "为纯粹正官正印之格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第124页"
+  },
+  {
+    "case_name": "千里_P125",
+    "pillars": [
+      "丙寅",
+      "丁卯",
+      "戊辰",
+      "己巳"
+    ],
+    "expected_geju": "七杀格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第125页"
+  },
+  {
+    "case_name": "千里_P126",
+    "pillars": [
+      "乙亥",
+      "丙子",
+      "丁丑",
+      "戊寅"
+    ],
+    "expected_geju": "伤官格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第126页"
+  },
+  {
+    "case_name": "千里_P127",
+    "pillars": [
+      "壬戌",
+      "癸亥",
+      "甲子",
+      "乙丑"
+    ],
+    "expected_geju": "七杀格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第127页"
+  },
+  {
+    "case_name": "千里_P128",
+    "pillars": [
+      "己酉",
+      "庚戌",
+      "辛亥",
+      "壬子"
+    ],
+    "expected_geju": "食神格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第128页"
+  },
+  {
+    "case_name": "千里_P129",
+    "pillars": [
+      "壬子",
+      "辛亥",
+      "庚戌",
+      "己酉"
+    ],
+    "expected_geju": "正印格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第129页"
+  },
+  {
+    "case_name": "千里_P130",
+    "pillars": [
+      "乙酉",
+      "丙戌",
+      "丁亥",
+      "戊子"
+    ],
+    "expected_geju": "正印格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第130页"
+  },
+  {
+    "case_name": "千里_P131",
+    "pillars": [
+      "己未",
+      "戊午",
+      "丁巳",
+      "丙辰"
+    ],
+    "expected_geju": "洵贵格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第131页"
+  },
+  {
+    "case_name": "千里_P132",
+    "pillars": [
+      "乙未",
+      "甲午",
+      "癸巳",
+      "壬辰"
+    ],
+    "expected_geju": "正官格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第132页"
+  },
+  {
+    "case_name": "千里_P133",
+    "pillars": [
+      "庚申",
+      "己未",
+      "戊午",
+      "丁巳"
+    ],
+    "expected_geju": "体格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第133页"
+  },
+  {
+    "case_name": "千里_P134",
+    "pillars": [
+      "辛卯",
+      "壬辰",
+      "癸巳",
+      "甲午"
+    ],
+    "expected_geju": "所谓暗合格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第134页"
+  },
+  {
+    "case_name": "千里_P135",
+    "pillars": [
+      "庚辰",
+      "辛巳",
+      "壬午",
+      "癸未"
+    ],
+    "expected_geju": "伤官格",
+    "expected_strength": "身弱",
+    "source": "千里命稿 第135页"
+  },
+  {
+    "case_name": "千里_P136",
+    "pillars": [
+      "庚辰",
+      "己卯",
+      "戊寅",
+      "丁丑"
+    ],
+    "expected_geju": "伤官格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第136页"
+  },
+  {
+    "case_name": "千里_P137",
+    "pillars": [
+      "丁未",
+      "戊申",
+      "己酉",
+      "庚戌"
+    ],
+    "expected_geju": "伤官格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第137页"
+  },
+  {
+    "case_name": "千里_P138",
+    "pillars": [
+      "庚子",
+      "己亥",
+      "戊戌",
+      "丁酉"
+    ],
+    "expected_geju": "阳刃格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第138页"
+  },
+  {
+    "case_name": "千里_P139",
+    "pillars": [
+      "丙午",
+      "乙巳",
+      "甲辰",
+      "癸卯"
+    ],
+    "expected_geju": "两神成像格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第139页"
+  },
+  {
+    "case_name": "千里_P140",
+    "pillars": [
+      "庚辰",
+      "己卯",
+      "戊寅",
+      "丁丑"
+    ],
+    "expected_geju": "七杀格",
+    "expected_strength": "身弱",
+    "source": "千里命稿 第140页"
+  },
+  {
+    "case_name": "千里_P141",
+    "pillars": [
+      "戊辰",
+      "己巳",
+      "庚午",
+      "辛未"
+    ],
+    "expected_geju": "月刃格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第141页"
+  },
+  {
+    "case_name": "千里_P142",
+    "pillars": [
+      "乙卯",
+      "甲寅",
+      "癸丑",
+      "壬子"
+    ],
+    "expected_geju": "七杀格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第142页"
+  },
+  {
+    "case_name": "千里_P143",
+    "pillars": [
+      "甲午",
+      "乙未",
+      "丙申",
+      "丁酉"
+    ],
+    "expected_geju": "动辄以化气格",
+    "expected_strength": "身弱",
+    "source": "千里命稿 第143页"
+  },
+  {
+    "case_name": "千里_P144",
+    "pillars": [
+      "庚辰",
+      "辛巳",
+      "壬午",
+      "癸未"
+    ],
+    "expected_geju": "伤官格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第144页"
+  },
+  {
+    "case_name": "千里_P145",
+    "pillars": [
+      "己丑",
+      "戊子",
+      "丁亥",
+      "丙戌"
+    ],
+    "expected_geju": "伤官格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第145页"
+  },
+  {
+    "case_name": "千里_P146",
+    "pillars": [
+      "癸未",
+      "壬午",
+      "辛巳",
+      "庚申"
+    ],
+    "expected_geju": "伤官格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第146页"
+  },
+  {
+    "case_name": "千里_P147",
+    "pillars": [
+      "庚寅",
+      "辛卯",
+      "壬辰",
+      "癸巳"
+    ],
+    "expected_geju": "七杀格",
+    "expected_strength": "身弱",
+    "source": "千里命稿 第147页"
+  },
+  {
+    "case_name": "千里_P148",
+    "pillars": [
+      "己卯",
+      "戊寅",
+      "丁丑",
+      "丙子"
+    ],
+    "expected_geju": "正印格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第148页"
+  },
+  {
+    "case_name": "千里_P149",
+    "pillars": [
+      "乙酉",
+      "丙戌",
+      "丁亥",
+      "戊子"
+    ],
+    "expected_geju": "正印格",
+    "expected_strength": "身强",
+    "source": "千里命稿 第149页"
+  },
+  {
+    "case_name": "千里_P150",
+    "pillars": [
+      "乙未",
+      "甲午",
+      "癸巳",
+      "壬辰"
+    ],
+    "expected_geju": "食神格",
+    "expected_strength": "未知",
+    "source": "千里命稿 第150页"
+  }
+]

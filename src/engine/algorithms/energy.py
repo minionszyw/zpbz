@@ -42,62 +42,59 @@ class EnergyModel:
     def calculate_scores(ctx: BaziContext, tracer: Tracer = None) -> Dict[str, Dict]:
         """
         计算五行综合能量分值。
-        返回: { "木": {"score": 45, "state": "旺"}, ... }
         """
         lunar = ctx.solar.getLunar()
         eight_char = lunar.getEightChar()
         month_zhi = eight_char.getMonthZhi()
+        day_gan = eight_char.getDayGan()
         
-        # 初始化分值
         scores = {elem: 0.0 for elem in EnergyModel.ELEMENT_MAP.keys()}
-        states = {} # 日主在月令的状态
+        states = {}
 
-        # 1. 扫描天干 (位置权重)
-        # 权重：月干 1.2, 时干 1.0, 年干 1.0 (日干不直接计入分值，但在后续强弱判定中作为主体)
+        # 1. 扫描天干
         stems = [
             (eight_char.getYearGan(), 1.0, "年干"),
             (eight_char.getMonthGan(), 1.2, "月干"),
-            (eight_char.getTimeGan(), 1.0, "时干")
+            (eight_char.getTimeGan(), 1.0, "时干"),
+            (eight_char.getDayGan(), 0.5, "日主(自身气势)") # 日主自身也占少量基础分
         ]
         
         for gan, weight, pos in stems:
             elem = EnergyModel._gan_to_elem(gan)
             base_val = 10.0 * weight
             scores[elem] += base_val
-            if tracer:
-                tracer.record("五行评分", f"{pos}[{gan}] ({elem}): 基础分 {base_val}")
 
-        # 2. 扫描地支通根 (核心权重)
-        # 地支权重：月支 3.0, 日支 1.5, 年支 1.0, 时支 1.0
+        # 2. 扫描地支通根 (强化月令权重)
         branches = [
             (eight_char.getYearZhi(), 1.0, "年支", eight_char.getYearHideGan),
-            (eight_char.getMonthZhi(), 3.0, "月支", eight_char.getMonthHideGan),
+            (eight_char.getMonthZhi(), 4.0, "月支", eight_char.getMonthHideGan), # 提升月令从 3.0 到 4.0
             (eight_char.getDayZhi(), 1.5, "日支", eight_char.getDayHideGan),
             (eight_char.getTimeZhi(), 1.0, "时支", eight_char.getTimeHideGan)
         ]
         
         for zhi, weight, pos, hide_func in branches:
-            # 获取藏干
             hide_gans = hide_func() 
-            # 库返回字符串列表
             for i, gan in enumerate(hide_gans):
                 elem = EnergyModel._gan_to_elem(gan)
-                # 判定气之虚实
                 if i == 0: root_type = "MAIN"
                 elif i == 1: root_type = "MEDIUM"
                 else: root_type = "RESIDUAL"
                 
                 root_val = 10.0 * weight * EnergyModel.ROOT_WEIGHTS[root_type]
                 scores[elem] += root_val
-                if tracer:
-                    tracer.record("五行评分", f"{pos}[{zhi}] 藏 [{gan}]: 通根 {root_val}")
 
-        # 3. 定性状态计算
-        day_gan = eight_char.getDayGan()
+        # 3. 状态惩罚与修正 (核心改进)
         for elem in scores.keys():
-            # 取该五行的代表阳干计算在月令的状态
             rep_gan = EnergyModel.ELEMENT_MAP[elem][0]
-            states[elem] = EnergyModel.get_state(rep_gan, month_zhi)
+            state = EnergyModel.get_state(rep_gan, month_zhi)
+            states[elem] = state
+            
+            # 如果处于 死、绝、病 地，能量有效性减扣 30% (符合'根本极轻'论述)
+            if state in ["死", "绝", "病"]:
+                old_score = scores[elem]
+                scores[elem] *= 0.7
+                if tracer and elem == EnergyModel._gan_to_elem(day_gan):
+                    tracer.record("五行评分", f"日主处于月令[{state}]地，属于'根本极轻'，分值修正: {old_score:.1f} -> {scores[elem]:.1f}")
             
         return {elem: {"score": round(scores[elem], 2), "state": states[elem]} for elem in scores.keys()}
 

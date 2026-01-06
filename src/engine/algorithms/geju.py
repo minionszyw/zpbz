@@ -20,19 +20,11 @@ class GejuAnalyzer:
     def analyze(ctx: BaziContext, interactions: List[Interaction], tracer: Tracer = None) -> GejuResult:
         lunar = ctx.solar.getLunar()
         eight_char = lunar.getEightChar()
+        day_gan = eight_char.getDayGan()
         
-        # 1. 优先神检测: 有官莫寻格局
-        # (简化实现: 暂跳过)
-
-        # 2. 正八格判定逻辑 (月令为纲)
-        month_zhi = eight_char.getMonthZhi()
+        # 1. 基础格获取 (月令透干或本气)
         month_all_gans = eight_char.getMonthHideGan()
-        
         geju_name = ""
-        geju_type = "INNER_EIGHT"
-        
-        # 检查透干: 年, 月, 时
-        # 定义检查列表: (天干值, 获取该干十神的方法)
         check_list = [
             (eight_char.getYearGan(), eight_char.getYearShiShenGan),
             (eight_char.getMonthGan(), eight_char.getMonthShiShenGan),
@@ -42,29 +34,43 @@ class GejuAnalyzer:
         for gan, shi_shen_func in check_list:
             if gan in month_all_gans:
                 ss = shi_shen_func()
-                # 官、财、印、食、杀、伤 均可成格
                 if any(k in ss for k in ["官", "财", "印", "食", "杀", "伤"]):
-                    geju_name = f"{ss}格"
-                    if tracer: tracer.record("格局分析", f"月令藏干[{gan}]透出为{ss}，定格为[{geju_name}]")
+                    geju_name = ss
                     break
         
         if not geju_name:
-            # 无透干，取本气 (库中 getShiShenZhi[1] 通常是月令本气十神)
-            main_ss = eight_char.getMonthShiShenZhi()[0] # 主气十神
-            geju_name = f"{main_ss}格"
-            if tracer: tracer.record("格局分析", f"月令无透干，取本气十神[{main_ss}]定格")
+            main_ss = eight_char.getMonthShiShenZhi()[0]
+            # 如果主气是比劫，则不以比劫定格
+            if "比" in main_ss or "劫" in main_ss:
+                geju_name = "建禄格" if "比" in main_ss else "月刃格"
+            else:
+                geju_name = main_ss
 
-        # 3. 质量审计 (简易逻辑)
+        # 2. 意象组合升级 (DESIGN 4.6 补强)
+        all_stems_ss = [eight_char.getYearShiShenGan(), eight_char.getMonthShiShenGan(), eight_char.getTimeShiShenGan()]
+        
+        if "伤官" in geju_name or "伤官" in all_stems_ss:
+            if any("印" in s for s in all_stems_ss):
+                geju_name = "伤官佩印"
+        elif "食神" in geju_name:
+            if any("财" in s for s in all_stems_ss):
+                geju_name = "食神生财"
+        elif "杀" in geju_name:
+            if any("印" in s for s in all_stems_ss):
+                geju_name = "杀印相生"
+
+        if not geju_name.endswith("格") and "佩印" not in geju_name and "相生" not in geju_name and "生财" not in geju_name:
+            geju_name += "格"
+
+        # 3. 质量审计 (简易)
         status = "成格"
-        # 检查是否有冲破月令的情况
-        for inter in interactions:
-            if inter.type == "冲" and ("月支" in [inter.source, inter.target]):
-                status = "破格"
-                if tracer: tracer.record("格局分析", f"格局 [{geju_name}] 因月令被冲而破损")
-
+        # 检查天干是否有克损
+        if "正官" in geju_name and "伤官" in all_stems_ss:
+            status = "破格 (伤官见官)"
+        
         return GejuResult(
             name=geju_name,
-            type=geju_type,
+            type="INNER_EIGHT",
             status=status,
-            detail=f"取自月令{month_zhi}中{geju_name}"
+            detail=f"综合月令与天干意象判定为[{geju_name}]"
         )
