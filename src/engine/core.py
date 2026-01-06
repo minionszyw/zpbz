@@ -1,0 +1,60 @@
+from typing import List, Dict, Optional
+from pydantic import BaseModel, Field
+from datetime import datetime
+from src.engine.models import BaziRequest
+from src.engine.preprocessor import Preprocessor, BaziContext
+from src.engine.extractor import (
+    CoreExtractor, FortuneExtractor, AuxiliaryExtractor, 
+    CoreChart, FortuneData, AuxiliaryChart
+)
+
+# 补救 1.1.3: 环境快照
+class EnvironmentSnapshot(BaseModel):
+    processed_at: str = Field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    original_request: BaziRequest
+
+# 补救 2.4.1: 完整聚合模型
+class BaziResult(BaseModel):
+    environment: EnvironmentSnapshot
+    request: BaziRequest
+    birth_solar_datetime: str  # 校正后的实际公历出生时刻
+    birth_lunar_datetime: str  # 校正后的实际农历出生时刻
+    core: CoreChart
+    fortune: FortuneData
+    auxiliary: AuxiliaryChart
+
+class BaziEngine:
+    def __init__(self):
+        self.preprocessor = Preprocessor()
+
+    def arrange(self, request: BaziRequest) -> BaziResult:
+        # 1. 预处理
+        ctx = self.preprocessor.process(request)
+        
+        # 2. 提取数据
+        core_chart = CoreExtractor.extract(ctx)
+        fortune_data = FortuneExtractor.extract(ctx)
+        auxiliary_chart = AuxiliaryExtractor.extract(ctx)
+        
+        # 3. 构建快照
+        env = EnvironmentSnapshot(original_request=request)
+        
+        # 过滤掉库自带的星座信息
+        import re
+        solar_full = ctx.solar.toFullString()
+        lunar_full = ctx.solar.getLunar().toFullString()
+        
+        zodiac_pattern = r"\s(白羊|金牛|双子|巨蟹|狮子|处女|天秤|天蝎|射手|摩羯|水瓶|双鱼)座"
+        
+        clean_solar = re.sub(zodiac_pattern, "", solar_full)
+        clean_lunar = re.sub(zodiac_pattern, "", lunar_full)
+        
+        return BaziResult(
+            environment=env,
+            request=request,
+            birth_solar_datetime=clean_solar,
+            birth_lunar_datetime=clean_lunar,
+            core=core_chart,
+            fortune=fortune_data,
+            auxiliary=auxiliary_chart
+        )
