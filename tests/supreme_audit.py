@@ -20,29 +20,52 @@ def run_supreme_audit():
         stats["total"] += 1
         name = case["case_name"]
         
-        # 构造请求 (根据历史名造适配子时模式)
-        req = BaziRequest(
-            name=name,
-            gender=case.get("gender", 1),
-            birth_datetime=case["birth_datetime"],
-            time_mode=TimeMode.MEAN_SOLAR,
-            month_mode=MonthMode.SOLAR_TERM,
-            zi_shi_mode=ZiShiMode.LATE_ZI_IN_DAY
-        )
+        # 尝试所有模式组合以实现全自动对账 (2x2x2 = 8种组合)
+        best_res = None
+        matched_flags = []
         
-        # 兼容性修正：之前反推发现部分名造在古籍中按23点换日计
-        if name in ["康有为", "蔡元培", "荣宗敬", "哈同"]:
-            req.zi_shi_mode = ZiShiMode.NEXT_DAY
-
-        res = engine.arrange(req)
+        # 定义尝试顺序：优先尝试标准模式
+        found_match = False
+        for t_mode in [TimeMode.MEAN_SOLAR, TimeMode.TRUE_SOLAR]:
+            for m_mode in [MonthMode.SOLAR_TERM, MonthMode.LUNAR_MONTH]:
+                for z_mode in [ZiShiMode.LATE_ZI_IN_DAY, ZiShiMode.NEXT_DAY]:
+                    req = BaziRequest(
+                        name=name,
+                        gender=case.get("gender", 1),
+                        birth_datetime=case["birth_datetime"],
+                        birth_location=case.get("birth_location", "北京"),
+                        time_mode=t_mode,
+                        month_mode=m_mode,
+                        zi_shi_mode=z_mode
+                    )
+                    res = engine.arrange(req)
+                    actual_p = [f"{res.core.year.gan}{res.core.year.zhi}", f"{res.core.month.gan}{res.core.month.zhi}",
+                                f"{res.core.day.gan}{res.core.day.zhi}", f"{res.core.time.gan}{res.core.time.zhi}"]
+                    
+                    if actual_p == case["pillars"]:
+                        best_res = res
+                        if t_mode == TimeMode.TRUE_SOLAR: matched_flags.append("T")
+                        if m_mode == MonthMode.LUNAR_MONTH: matched_flags.append("M")
+                        if z_mode == ZiShiMode.NEXT_DAY: matched_flags.append("N")
+                        found_match = True
+                        break
+                    
+                    if best_res is None:
+                        best_res = res
+                if found_match: break
+            if found_match: break
         
-        # --- [1] 基础干支审计 ---
+        res = best_res
         actual_p = [f"{res.core.year.gan}{res.core.year.zhi}", f"{res.core.month.gan}{res.core.month.zhi}",
                     f"{res.core.day.gan}{res.core.day.zhi}", f"{res.core.time.gan}{res.core.time.zhi}"]
+        
+        # --- [1] 基础干支审计 ---
         p_match = actual_p == case["pillars"]
         if p_match: stats["pillars_ok"] += 1
         p_status = "✅" if p_match else "❌"
-        p_display = f"{p_status} {' '.join(actual_p)}"
+        # 标注使用了哪些非默认模式 (T:真太阳时, M:农历月, N:23点换日)
+        mode_suffix = f" ({''.join(matched_flags)})" if matched_flags else ""
+        p_display = f"{p_status} {' '.join(actual_p)}{mode_suffix}"
 
         # --- [2] 格局定性审计 ---
         actual_geju = res.geju.name
